@@ -1,28 +1,67 @@
 # Adult Income Prediction Using Machine Learning
 
-## Project Overview
+A machine learning classification project that predicts whether an individual's annual income is **≤50K or >50K** using demographic, educational, employment and financial features.
 
-This project predicts whether an individual's annual income is **<=50K or >50K** using demographic, employment, education, and financial-related features from the Adult Income dataset.
+The project follows an end-to-end ML workflow, including data cleaning, exploratory data analysis, feature engineering, model comparison, hyperparameter tuning and classification threshold optimization.
 
-The project follows an end-to-end machine learning workflow:
+## 📌 Project Highlights
 
-**Data Understanding → Data Cleaning → EDA → Feature Engineering → Preprocessing → Model Comparison → Hyperparameter Tuning → Threshold Optimization → Evaluation → Model Saving / Deployment Readiness**
+| Metric | Result |
+|---|---:|
+| Dataset Size | 32,561 rows |
+| Input Features | 13 |
+| Best Model | XGBoost |
+| Test Accuracy | 86.37% |
+| Test Precision | 71.67% |
+| Test Recall | 71.81% |
+| Test F1 Score | 71.74% |
+| ROC-AUC | 92.16% |
+| Optimized Threshold | 0.69 |
 
-## Dataset
+## 📑 Table of Contents
 
-- **Rows:** 32,561
-- **Original columns:** 15
-- **Target variable:** `Income`
-- **Target classes:** `<=50K` and `>50K`
+- [Business Problem](#business-problem)
+- [Dataset](#dataset)
+- [Technologies Used](#technologies-used)
+- [Project Workflow](#project-workflow)
+- [Model Comparison](#model-comparison)
+- [Final Model Evaluation](#final-model-evaluation)
+- [Model Interpretation](#model-interpretation)
+- [Project Structure](#project-structure)
+- [Installation and Execution](#installation-and-execution)
+- [Key Learnings](#key-learnings)
+- [Author](#author)
 
-After preprocessing and removing unnecessary information, the modeling data contains 13 input features.
+## 🎯 Business Problem
 
-The target distribution is imbalanced:
+Income classification can help understand how demographic, educational and employment-related factors relate to income levels.
 
-- `<=50K`: 75.9%
-- `>50K`: 24.1%
+The objective of this project is to develop a machine learning classification model that predicts whether an individual's annual income is:
 
-## Technologies Used
+- `<=50K`
+- `>50K`
+
+## 📊 Dataset
+
+The project uses the Adult Income dataset.
+
+**Dataset details:**
+
+- Original rows: 32,561
+- Original columns: 15
+- Target variable: Income
+- Input features after preprocessing: 13
+
+**Target distribution:**
+
+| Income Category | Distribution |
+|---|---:|
+| <=50K | 75.9% |
+| >50K | 24.1% |
+
+The dataset contains numerical and categorical features related to individuals' demographic and employment information.
+
+## 🛠️ Technologies Used
 
 - Python
 - Pandas
@@ -33,192 +72,121 @@ The target distribution is imbalanced:
 - XGBoost
 - LightGBM
 - Joblib
-- Streamlit (application file included in the repository)
+- Streamlit
 
-## Project Workflow
+## ⚙️ Project Workflow
 
 ### 1. Data Understanding
-
-The dataset was loaded and inspected to understand:
-
-- Dataset dimensions
-- Feature types
-- Target distribution
-- Missing values
-- Duplicate records
-- Numerical feature distributions
-- Categorical feature distributions
-- Outliers
-- Correlations between numerical features
+- Dataset inspection and dimensionality analysis
+- Feature types and target distribution
+- Missing-value analysis
+- Duplicate detection
+- Numerical and categorical feature analysis
 
 ### 2. Data Cleaning
+- Replaced `?` values with missing values
+- Handled missing categorical values using mode imputation
+- Removed duplicate records
+- Removed unnecessary Final_Weight column
+- Standardized column names
 
-The project includes:
-
-- Replacing `?` values with missing values (`NaN`)
-- Checking missing-value percentages
-- Handling missing categorical values using mode imputation
-- Detecting and removing duplicate records
-- Removing the `Final_Weight` column
-- Standardizing column names
-- Renaming columns to clearer names
-
-### 3. Exploratory Data Analysis
-
-EDA was performed to understand:
-
-- Target-variable distribution
+### 3. Exploratory Data Analysis (EDA)
+- Target distribution analysis
 - Numerical feature distributions
-- Categorical feature distributions
-- Outliers in numerical variables
-- Correlations among numerical variables
-
-Visualizations include distribution plots, boxplots, and a correlation heatmap.
+- Categorical feature analysis
+- Outlier detection
+- Correlation analysis
+- Data visualization using Matplotlib and Seaborn
 
 ### 4. Feature Engineering
-
-The project includes feature engineering based on the dataset's characteristics, including:
-
-- Log transformation for skewed features such as `Capital_Gain` and `Capital_Loss`
-- Creation of `Has_Capital_Gain` and `Has_Capital_Loss`
-- Creation/grouping of relevant categorical information
-- Handling of highly correlated numerical features
+- Log transformation of skewed features
+- Created Has_Capital_Gain and Has_Capital_Loss features
+- Grouped relevant categorical information
+- Examined highly correlated numerical features
 
 ### 5. Train-Test Split
 
-The dataset was divided using:
-
-- **80% training data**
-- **20% testing data**
-- Stratified split to maintain the target-class distribution
-- `random_state=42` for reproducibility
-
-The resulting split was:
-
-- Training: 26,029 rows
-- Testing: 6,508 rows
+- Training data: 80%
+- Testing data: 20%
+- Stratified splitting
+- Random state: 42
 
 ### 6. Feature Preprocessing
 
-A `ColumnTransformer` was used to apply different preprocessing methods to different feature groups.
+Used `ColumnTransformer` to apply different preprocessing techniques:
 
-- `StandardScaler` for selected numerical features
-- `RobustScaler` for skewed/outlier-sensitive numerical features
-- `OneHotEncoder` for categorical features
-- Binary gender feature passed through directly
+- StandardScaler for selected numerical features
+- RobustScaler for skewed and outlier-sensitive numerical features
+- OneHotEncoder for categorical features
+- Passthrough for binary gender feature
 
 ### 7. Model Comparison
 
-Four classification models were trained and evaluated:
+Four machine learning algorithms were trained and evaluated:
 
-1. Logistic Regression
-2. Random Forest
-3. XGBoost
-4. LightGBM
+- Logistic Regression
+- Random Forest
+- XGBoost
+- LightGBM
 
-Because the target classes are imbalanced, class-balancing approaches were used during model training.
+### 8. Hyperparameter Tuning
 
-### Model Comparison Results
-
-| Model | Accuracy | F1 Score | ROC-AUC | PR-AUC | Precision | Recall |
-|---|---:|---:|---:|---:|---:|---:|
-| XGBoost | 0.8328 | 0.7088 | 0.9225 | 0.8230 | 0.6107 | 0.8444 |
-| LightGBM | 0.8308 | 0.7038 | 0.9212 | 0.8204 | 0.6087 | 0.8342 |
-| Logistic Regression | 0.8002 | 0.6660 | 0.8945 | 0.7360 | 0.5577 | 0.8265 |
-| Random Forest | 0.7893 | 0.6655 | 0.9029 | 0.7712 | 0.5389 | 0.8699 |
-
-Based on the recorded model-comparison results, XGBoost was selected for further tuning.
-
-## 8. XGBoost Hyperparameter Tuning
-
-RandomizedSearchCV was used with:
+Used `RandomizedSearchCV` with:
 
 - 5-fold Stratified Cross-Validation
 - 40 parameter combinations
-- F1 score as the optimization metric
+- F1 Score as the optimization metric
 
-The recorded best cross-validation F1 score was:
+Best recorded cross-validation F1 Score: **0.7177**
 
-**CV F1 Score: 0.7177**
+### 9. Threshold Optimization
 
-Selected parameters included:
+The classification threshold was optimized using a validation split instead of relying only on the default 0.5 threshold.
 
-- `n_estimators`: 400
-- `max_depth`: 4
-- `learning_rate`: 0.08
-- `subsample`: 0.8
-- `colsample_bytree`: 0.7
-- `gamma`: 1.0
-- `min_child_weight`: 5
-- `reg_alpha`: 2.0
-- `reg_lambda`: 3.0
+Selected threshold: **0.69**
 
-## 9. Threshold Optimization
+## 📈 Model Comparison
 
-Instead of using only the default probability threshold of 0.5, the project evaluated different thresholds on a validation split.
-
-The selected optimized threshold recorded in the notebook was:
-
-**0.69**
-
-At this threshold, the test-set results were:
-
-- Accuracy: **0.8637**
-- Precision: **0.7167**
-- Recall: **0.7181**
-- F1 Score: **0.7174**
-- ROC-AUC: **0.9216**
-- PR-AUC: **0.8196**
-
-The ROC-AUC and PR-AUC are probability-based metrics, so changing the classification threshold does not change these values.
-
-## 10. Final Model Evaluation
-
-The final classification report at the optimized threshold showed:
-
-| Class | Precision | Recall | F1 Score |
+| Model | Accuracy | F1 Score | ROC-AUC |
 |---|---:|---:|---:|
-| <=50K | 0.91 | 0.91 | 0.91 |
-| >50K | 0.72 | 0.72 | 0.72 |
+| XGBoost | 83.28% | 70.88% | 92.25% |
+| LightGBM | 83.08% | 70.38% | 92.12% |
+| Logistic Regression | 80.02% | 66.60% | 89.45% |
+| Random Forest | 78.93% | 66.55% | 90.29% |
 
-Overall accuracy was approximately **86.37%**.
+XGBoost was selected for further hyperparameter tuning based on the recorded model comparison results.
+
+## 🏆 Final Model Evaluation
+
+The tuned XGBoost model was evaluated using the optimized threshold of 0.69.
+
+**Final test results:**
+
+| Metric | Score |
+|---|---:|
+| Accuracy | 86.37% |
+| Precision | 71.67% |
+| Recall | 71.81% |
+| F1 Score | 71.74% |
+| ROC-AUC | 92.16% |
+| PR-AUC | 81.96% |
 
 The notebook also includes:
 
-- Confusion matrix
-- ROC curve
-- Precision-Recall curve
-- Threshold comparison
-- Train/test F1 comparison
-- Feature-importance analysis
+- Confusion Matrix
+- ROC Curve
+- Precision-Recall Curve
+- Threshold Comparison
+- Train-Test F1 Comparison
+- Feature Importance Analysis
 
-## 11. Model Interpretation
+## 🔍 Model Interpretation
 
-Feature importance was extracted from the final XGBoost model to identify the most influential features used by the model.
+Feature importance was extracted from the final XGBoost model to identify influential features.
 
-The notebook visualizes the top 15 feature importances.
+The notebook includes a visualization of the top 15 feature importances.
 
-## 12. Model Saving and Deployment Readiness
-
-The final trained model and related metadata were saved using Joblib as:
-
-`xgb_pipeline_v2.pkl`
-
-The saved bundle includes:
-
-- Trained preprocessing/model pipeline
-- Classification threshold
-- Model metadata
-- Cross-validation F1 score
-- Test F1 score
-- PR-AUC
-- Cross-validation gap
-- Best hyperparameters
-- Python and library version information
-
-The repository also contains an `app.py` file and dependency/runtime files for the application.
-
-## Project Structure
+## 📁 Project Structure
 
 ```text
 AdultIncomePrediction/
@@ -232,56 +200,66 @@ AdultIncomePrediction/
 └── README.md
 ```
 
-## How to Run the Project
+## 🚀 Installation and Execution
 
 ### 1. Clone the repository
 
 ```bash
 git clone https://github.com/NikhithaLingala/AdultIncomePrediction.git
+```
+
+### 2. Navigate to the project directory
+
+```bash
 cd AdultIncomePrediction
 ```
 
-### 2. Install dependencies
+### 3. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. Explore the notebook
+### 4. Run the Jupyter Notebook
 
-Open:
-
-```text
-adult_salary_prediction_XGB.ipynb
+```bash
+jupyter notebook
 ```
 
-Run the notebook cells to reproduce the data analysis, preprocessing, model training, tuning, and evaluation workflow.
+Open `adult_salary_prediction_XGB.ipynb` to explore the complete machine learning workflow.
 
-### 4. Run the application
+### 5. Run the Streamlit Application
 
-The repository includes `app.py` for the application/deployment component. Use the command and setup specified by the application's dependencies.
+```bash
+streamlit run app.py
+```
 
-## Key Learning Outcomes
+The application uses the saved model pipeline and its associated threshold. Ensure the model file and required dependencies are available.
 
-Through this project, I worked on:
+## 📚 Key Learnings
+
+Through this project, I gained practical experience in:
 
 - Data cleaning and preprocessing
-- Exploratory data analysis
-- Handling missing values and duplicates
+- Exploratory Data Analysis
 - Feature engineering
-- Handling class imbalance
-- Feature scaling and categorical encoding
-- Comparing multiple machine learning models
+- Handling imbalanced classification data
+- Feature scaling and encoding
+- Comparing machine learning algorithms
 - Hyperparameter tuning
 - Cross-validation
-- Classification metrics
-- Threshold optimization
+- Classification evaluation metrics
+- Classification threshold optimization
 - Model interpretation
-- Saving a trained ML model
-- Preparing a model for application deployment
+- Saving trained models using Joblib
+- Preparing ML applications for deployment
 
-## Author
+## 👩‍💻 Author
 
 **Nikhitha Lingala**
 
-GitHub: https://github.com/NikhithaLingala
+B.Tech – Electronics and Communication Engineering (2025)
+
+- GitHub: [NikhithaLingala](https://github.com/NikhithaLingala)
+  
+
